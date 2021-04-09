@@ -13,8 +13,10 @@ let commands = [{
     execute: (gameEvent) => {
         var server = gameEvent.Owner;
         var cid = gameEvent.Target.ClientNumber;
-        if (gameEvent.Origin.Level > gameEvent.Target.Level)
+        if (gameEvent.Origin.Level > gameEvent.Target.Level){
             server.RconParser.SetDvarAsync(server.RemoteConnection, "g_switchteam", ''+ cid.toString())
+            gameEvent.Origin.Tell('^2'+ gameEvent.Target.Name +' ^7has been team switched');
+        }
         else
             gameEvent.Origin.Tell(permission_error + gameEvent.Target.Name);
     }
@@ -31,8 +33,10 @@ let commands = [{
     execute: (gameEvent) => {
         var server = gameEvent.Owner;
         var cid = gameEvent.Target.ClientNumber;
-        if (gameEvent.Origin.Level > gameEvent.Target.Level)
+        if (gameEvent.Origin.Level > gameEvent.Target.Level){
             server.RconParser.SetDvarAsync(server.RemoteConnection, "g_switchspec", ''+ cid.toString())
+            gameEvent.Origin.Tell('^2'+ gameEvent.Target.Name +' ^7has been swichted to spectator mode');
+        }
         else
             gameEvent.Origin.Tell(permission_error + gameEvent.Target.Name);
     }
@@ -63,8 +67,8 @@ let commands = [{
     }],
     execute: (gameEvent) => {
         var server = gameEvent.Owner;
-        var cid = gameEvent.Target.ClientNumber;
-        server.RconParser.SetDvarAsync(server.RemoteConnection, "g_balance", ''+ cid.toString())
+        server.RconParser.SetDvarAsync(server.RemoteConnection, "g_balance")
+        gameEvent.Origin.Tell('Balancing teams ...');
     }
 }, {
     name: "spawn",
@@ -80,6 +84,7 @@ let commands = [{
         var server = gameEvent.Owner;
         var cid = gameEvent.Target.ClientNumber;
         server.RconParser.SetDvarAsync(server.RemoteConnection, "b3_spawn", ''+ cid.toString())
+        gameEvent.Origin.Tell('^2'+ gameEvent.Target.Name +' ^7is spawned');
     }
 }
 
