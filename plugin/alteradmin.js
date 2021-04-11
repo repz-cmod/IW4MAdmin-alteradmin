@@ -3,7 +3,7 @@ var permission_error = "Your rank is lower than "
 let commands = [{
     name: "teamswitch",
     description: "Switches a player's team",
-    alias: "ts",
+    alias: "tms",
     permission: "Administrator",
     targetRequired: true,
     arguments: [{
@@ -60,11 +60,6 @@ let commands = [{
     description: "Balances teams",
     alias: "blc",
     permission: "Administrator",
-    targetRequired: true,
-    arguments: [{
-        name: "Target Player",
-        required: true
-    }],
     execute: (gameEvent) => {
         var server = gameEvent.Owner;
         server.RconParser.SetDvarAsync(server.RemoteConnection, "g_balance")
