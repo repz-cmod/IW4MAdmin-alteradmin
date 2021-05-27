@@ -1,3 +1,4 @@
+ 
 var permission_error = "Your rank is lower than "
 
 let commands = [{
@@ -89,12 +90,13 @@ let plugin = {
     author: 'sepehr-gh',
     version: 1.0,
     name: 'RepZ Alteradmin',
+    logger: null,
 
     onEventAsync: function (gameEvent, server) {
     },
 
     onLoadAsync: function (manager) {
-        this.logger = manager.GetLogger(0);
+        this.logger = _serviceResolver.ResolveService("ILogger");
         this.logger.WriteDebug("RepZ Alteradmin loaded");
     },
 
