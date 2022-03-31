@@ -99,7 +99,26 @@ let commands = [{
         server.RconParser.SetDvarAsync(server.RemoteConnection, "b3_spawn", ''+ cid.toString())
         gameEvent.Origin.Tell('^2'+ gameEvent.Target.Name +' ^7is spawned');
     }
-}
+}, {
+    name: "kill",
+    description: "Kills a player",
+    alias: "klp",
+    permission: "Administrator",
+    targetRequired: true,
+    arguments: [{
+        name: "Target Player",
+        required: true
+    }],
+    execute: (gameEvent) => {
+        var server = gameEvent.Owner;
+        var cid = gameEvent.Target.ClientNumber;
+        if (permissions.get_mapped(gameEvent.Origin.Level) > permissions.get_mapped(gameEvent.Target.Level)){
+            server.RconParser.SetDvarAsync(server.RemoteConnection, "g_killplayer", ''+ cid.toString())
+            gameEvent.Origin.Tell('^2'+ gameEvent.Target.Name +' ^7has been killed');
+        }
+        else
+            gameEvent.Origin.Tell(permission_error + gameEvent.Target.Name + " you: " + gameEvent.Origin.Level + " them: " +  gameEvent.Target.Level);
+    }
 
 ];
 
