@@ -1,5 +1,22 @@
- 
 var permission_error = "Your rank is lower than "
+
+const permissions = {
+	get_mapped: function(level){
+    	if (level === "Moderator"){
+        	return 4
+        }    
+    	if (level === "Administrator"){
+        	return 5
+        }
+    	if (level === "SeniorAdmin"){
+        	return 6
+        }
+    	if (level === "Owner"){
+        	return 7
+        }
+    	return 1
+    },
+};
 
 let commands = [{
     name: "teamswitch",
@@ -14,12 +31,12 @@ let commands = [{
     execute: (gameEvent) => {
         var server = gameEvent.Owner;
         var cid = gameEvent.Target.ClientNumber;
-        if (gameEvent.Origin.Level > gameEvent.Target.Level){
+        if (permissions.get_mapped(gameEvent.Origin.Level) > permissions.get_mapped(gameEvent.Target.Level)){
             server.RconParser.SetDvarAsync(server.RemoteConnection, "g_switchteam", ''+ cid.toString())
             gameEvent.Origin.Tell('^2'+ gameEvent.Target.Name +' ^7has been team switched');
         }
         else
-            gameEvent.Origin.Tell(permission_error + gameEvent.Target.Name);
+            gameEvent.Origin.Tell(permission_error + gameEvent.Target.Name + " you: " + gameEvent.Origin.Level + " them: " +  gameEvent.Target.Level);
     }
 }, {
     name: "spectate",
@@ -34,7 +51,7 @@ let commands = [{
     execute: (gameEvent) => {
         var server = gameEvent.Owner;
         var cid = gameEvent.Target.ClientNumber;
-        if (gameEvent.Origin.Level > gameEvent.Target.Level){
+        if (permissions.get_mapped(gameEvent.Origin.Level) > permissions.get_mapped(gameEvent.Target.Level)){
             server.RconParser.SetDvarAsync(server.RemoteConnection, "g_switchspec", ''+ cid.toString())
             gameEvent.Origin.Tell('^2'+ gameEvent.Target.Name +' ^7has been swichted to spectator mode');
         }
@@ -43,7 +60,7 @@ let commands = [{
     }
 }, {
     name: "teleport",
-    description: "Teleports a player to another player",
+    description: "Teleports a player to another player (bugged)",
     alias: "tp",
     permission: "SeniorAdmin",
     targetRequired: true,
@@ -88,16 +105,17 @@ let commands = [{
 
 let plugin = {
     author: 'sepehr-gh',
-    version: 1.0,
+    version: 1.4,
     name: 'RepZ Alteradmin',
     logger: null,
 
     onEventAsync: function (gameEvent, server) {
+    	this.logger.WriteDebug("Event for alteradmin");
     },
 
     onLoadAsync: function (manager) {
         this.logger = _serviceResolver.ResolveService("ILogger");
-        this.logger.WriteDebug("RepZ Alteradmin loaded");
+        this.logger.WriteInfo("RepZ Alteradmin loaded");
     },
 
     onUnloadAsync: function () {
